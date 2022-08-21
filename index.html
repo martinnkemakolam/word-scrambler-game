@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: purple;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        margin-top: 20vh;
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .game {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: fit-content;
+        height: fit-content;
+        background-color: #eee;
+        padding: 1rem 1.5rem;
+        border-radius: 1rem;
+        align-items: center;
+        justify-items: center;
+        box-sizing: content-box;
+    }
+
+    header {
+        font-size: 2rem;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        margin: .5rem 0;
+        text-align: left;
+    }
+
+    article {
+        letter-spacing: 10px;
+        text-align: center;
+        font: 1.5rem sans-serif;
+        border: 2px solid wheat;
+        padding: .5rem;
+        width: 300px;
+        word-wrap: break-word;
+    }
+
+    span {
+        display: inline-block;
+        text-align: left;
+        width: 100%;
+    }
+
+    span p {
+        margin: 5px 0;
+        font-weight: bolder;
+        font-size: 20px;
+    }
+
+    input {
+        width: 100%;
+        border: none;
+        padding: 2px;
+        margin: 12px 0;
+        outline: none
+    }
+
+    button {
+        padding: .5rem 1rem;
+        margin: 0 10px;
+        background-color: blueviolet;
+        border: none;
+        color: #eee;
+    }
+
+    #btn_ref {
+        background-color: gray;
+    }
+
+    .timeOut {
+        width: 100%;
+        height: fit-content;
+        background-color: #333;
+        position: absolute;
+        top: 0;
+        left: -1000px;
+        color: #eee;
+        font-size: 3rem;
+        text-align: center;
+        transition: all 500ms ease;
+    }
+
+    .timeOut.active {
+        left: 0;
+    }
+</style>
+
+<body>
+    <div class="timeOut"></div>
+    <div class="game">
+        <header>Word scarmbler game</header>
+        <article>Word That's Scrambled</article>
+        <span>
+            <p id="hint">hint:</p>
+            <p id="time"></p>
+        </span>
+        <input type="text" placeholder="Guess the word">
+        <div>
+            <button id="btn_ref">Refresh Word</button><button id="btn_check">Check</button>
+        </div>
+    </div>
+</body>
+<script>
+    let word = document.getElementsByTagName('article')
+    let hint = document.getElementById('hint')
+    let time = document.getElementById('time')
+    let input = document.getElementsByTagName('input')
+    let btn_ref = document.getElementById('btn_ref')
+    let btn_check = document.getElementById('btn_check')
+    let display = document.getElementsByClassName('timeOut')
+    let words = [
+        { 'word': 'ADDITION', 'hint': 'used in summing numbers' },
+        { 'word': 'SUBTRACTION', 'hint': 'used in minusing numbers' },
+        { 'word': 'DEFINATION', 'hint': 'the meaning of something' },
+        { 'word': 'ANTICIPATE', 'hint': 'to wait with high hopes' },
+        { 'word': 'GAME', 'hint': 'its some thing you play' },
+        { 'word': 'RESUME', 'hint': 'you have something on pause' },
+        { 'word': 'MANAGE', 'hint': 'to be in control of something' },
+        { 'word': 'SOUND', 'hint': 'something you listen to' },
+        { 'word': 'BASKETBALL', 'hint': 'the best sports in the world i.e lebron plays in it' },
+        { 'word': 'SECTION', 'hint': 'a part of something' },
+        { 'word': 'SPICE', 'hint': 'gives something more taste' },
+        { 'word': 'DEVICE', 'hint': 'electronic machine' },
+        { 'word': 'INDEX', 'hint': 'a number' },
+        { 'word': 'PARTICULAR', 'hint': 'something precise' },
+    ]
+    let count = 0
+    function rearrange() {
+        if (count === words.length) {
+            display[0].innerText = 'THATS ALL OF THEM ;)'
+            display[0].classList.add('active')
+        }
+        let str = words[count].word
+        let newStr = str.split('').sort().join('')
+        word[0].innerText = newStr
+        hint.innerText = 'hint: ' + words[count].hint
+    }
+    rearrange()
+    let timeCount = 30
+    function timer() {
+        time.innerText = 'Time left: ' + timeCount
+        if (timeCount !== 0) {
+            timeCount--
+        } else {
+            count++
+            rearrange()
+            display[0].classList.add('active')
+            display[0].innerText = 'TIME UP'
+            setTimeout(() => {
+                display[0].classList.remove('active')
+            }, 3000)
+            timeCount = 30
+        }
+        setTimeout('timer()', 1000)
+    }
+    timer()
+    function check() {
+        if (input[0].value.toLowerCase() === words[count].word.toLowerCase()) {
+            console.log('correct')
+            count++
+            rearrange()
+            display[0].classList.add('active')
+            display[0].innerText = 'CORRECT'
+            setTimeout(() => {
+                display[0].classList.remove('active')
+            }, 3000)
+        } else {
+            console.log('wrong')
+            count
+            rearrange()
+            display[0].classList.add('active')
+            display[0].innerText = 'WRONG'
+            setTimeout(() => {
+                display[0].classList.remove('active')
+            }, 3000)
+        }
+        console.log('clicked')
+    }
+    btn_check.onclick = () => {
+        timeCount = 30
+        check()
+        input[0].value = ''
+    }
+    btn_ref.onclick = () => {
+        timeCount = 30
+        for (let i = words.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [words[i], words[j]] = [words[j], words[i]];
+        }
+        count = 0
+        rearrange()
+    }
+</script>
+
+</html>
