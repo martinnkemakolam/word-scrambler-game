@@ -89,7 +89,7 @@
         background-color: #333;
         position: absolute;
         top: 0;
-        left: -1000px;
+        left: -10000px;
         color: #eee;
         font-size: 3rem;
         text-align: center;
@@ -104,7 +104,7 @@
 <body>
     <div class="timeOut"></div>
     <div class="game">
-        <header>Word scarmbler game</header>
+        <header>Word scrambler game</header>
         <article>Word That's Scrambled</article>
         <span>
             <p id="hint">hint:</p>
@@ -171,8 +171,8 @@
     }
     timer()
     function check() {
-        if (input[0].value.toLowerCase() === words[count].word.toLowerCase()) {
-            console.log('correct')
+        let pattern = RegExp(words[count].word + '\s?', 'gi')
+        if (pattern.test(input[0].value)) {
             count++
             rearrange()
             display[0].classList.add('active')
@@ -181,8 +181,7 @@
                 display[0].classList.remove('active')
             }, 3000)
         } else {
-            console.log('wrong')
-            count
+            count++
             rearrange()
             display[0].classList.add('active')
             display[0].innerText = 'WRONG'
